@@ -1,0 +1,31 @@
+= SPEC-001: Aplicación de Presupuesto Personal
+:sectnums:
+:toc:
+
+== Background
+
+Este proyecto surge como una solución personal y una herramienta de aprendizaje.
+La necesidad de una herramienta para gestionar eficazmente las finanzas
+personales utilizando métodos presupuestarios establecidos, combinada con el
+interés en desarrollar habilidades en tecnologías emergentes como Streamlit y
+Python, motiva el desarrollo de esta aplicación. Además, la funcionalidad de
+exportar e importar datos pretende ofrecer una manera flexible y accesible de
+manejar la información financiera.
+
+== Requirements
+
+- **Registro del Ingreso Mensual:**
+  * Posibilidad de escoger el mes para el cual se desea registrar el ingreso.
+- **Configuración de Presupuesto:**
+  * Opción de seleccionar entre los métodos presupuestarios 50/30/20 o 70/20/10.
+  * Configuración en base a ingresos y gastos mensuales del usuario.
+- **Gastos Fijos:**
+  * Detalle de gastos fijos dentro de cada categoría del presupuesto.
+  * Posibilidad de definir subcategorías personalizadas por el usuario.
+- **Visualización de Estadísticas:**
+  * Gráficos y estadísticas que muestran la distribución e impacto de los ingresos y gastos.
+- **Exportación e Importación de Datos:**
+  * Funcionalidad para exportar e importar datos financieros en formatos convenientes como txt, csv o json.
+- **Integración con Excel:**
+  * Generación de un archivo Excel a partir de una plantilla predefinida con los datos del usuario para facilitar el seguimiento y cumplimiento de metas presupuestarias.
+  

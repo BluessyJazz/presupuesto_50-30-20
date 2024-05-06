@@ -1,0 +1,24 @@
+@startuml
+
+package "Streamlit UI" {
+    [main.py]
+}
+
+package "Logic Modules" {
+    [budget_manager.py]
+    [data_handler.py]
+    [visualization.py]
+}
+
+database "Data" {
+    folder "CSV/JSON/TXT Files"
+    folder "Excel Templates"
+}
+
+[main.py] --> [budget_manager.py]
+[main.py] --> [data_handler.py]
+[main.py] --> [visualization.py]
+[data_handler.py] --> "CSV/JSON/TXT Files"
+[budget_manager.py] --> "Excel Templates"
+
+@enduml
