@@ -2,4 +2,3 @@ templates
 data
 /src/data_handler.py
 /src/__pycache__
-src\__pycache__
