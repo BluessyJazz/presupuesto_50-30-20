@@ -39,57 +39,90 @@ def main():
              destinar a cada categoría de tu presupuesto mensual')
 
     with st.form(key='my_form'):
+
         ingresos = st.number_input('Ingresos mensuales',
                                    min_value=0.0,
                                    help='Ingresos mensuales netos',
                                    format='%f',
-                                   step=1000.0
+                                   step=1000.0,
+                                   value=None,
+                                   placeholder="Ej: 1'200.000"
                                    )
         metodo_presupuesto = st.selectbox('Método de presupuesto',
                                           ['50-30-20',
                                            '70-20-10',
-                                           'Personalizado'])
-        if metodo_presupuesto == 'Personalizado':
-            porcentaje_necesidades = st.slider('Porcentaje de gastos \
-                                                esenciales',
-                                               min_value=50,
-                                               max_value=100,
-                                               value=50)
+                                           'Personalizado'],
+                                          index=None,
+                                          placeholder='Selecciona un método')
+        if metodo_presupuesto == "Personalizado":
+            tipo_gastos = st.selectbox('Gastos esenciales',
+                                       ['Porcentaje', 'Cantidad de dinero'])
+            if tipo_gastos == "Porcentaje":
+                porcentaje_necesidades = st.slider('Porcentaje de gastos \
+                                                    esenciales',
+                                                   min_value=0,
+                                                   max_value=100,
+                                                   value=50)
+
+                necesidades = (porcentaje_necesidades / 100)
+
+            elif tipo_gastos == "Cantidad de dinero":
+                necesidades = ingresos * 0.5
+                necesidades = st.number_input('Gastos esenciales',
+                                              min_value=0.0,
+                                              help='Gastos esenciales',
+                                              format='%f',
+                                              step=1000.0,
+                                              value=necesidades
+                                              )
+            proporcion_deseos_ahorros = st.slider('Proporción deseos/ahorros: \
+                                                  (1: partes iguales, 10: \
+                                                  10 veces más deseos que \
+                                                  ahorros)',
+                                                  min_value=0.0,
+                                                  max_value=10.0,
+                                                  value=3.0,
+                                                  step=0.10,
+                                                  format='%f')
 
         submit_button = st.form_submit_button(label='Calcular presupuesto')
 
-        # Calcular presupuesto
-        if metodo_presupuesto == '50-30-20':
-            gastos_esenciales = 50
-        elif metodo_presupuesto == '70-20-10':
-            gastos_esenciales = 70
-        elif metodo_presupuesto == 'Personalizado':
-            gastos_esenciales = porcentaje_necesidades
+        if submit_button and ingresos > 0:
+            # Calcular presupuesto según el método seleccionado
+            if metodo_presupuesto == '50-30-20':
+                necesidades, deseos, ahorros = calcular_presupuesto(ingresos,
+                                                                    0.5)
+            elif metodo_presupuesto == '70-20-10':
+                necesidades, deseos, ahorros = calcular_presupuesto(ingresos,
+                                                                    0.7)
+            else:  # Personalizado
+                # Calcular presupuesto personalizado
+                necesidades, deseos, ahorros = calcular_presupuesto(
+                                                    ingresos,
+                                                    necesidades,
+                                                    proporcion_deseos_ahorros
+                                                    )
 
-        # Validar ingresos
+            # Linea para separar el resultado
+            st.markdown('---')
+
+            # Mostrar presupuesto en 3 columnas con su explicación
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.write('Gastos esenciales')
+                st.write(f'💰 ${necesidades:,.0f}')
+            with col2:
+                st.write('Gastos prescindibles')
+                st.write(f'💸 ${deseos:,.0f}')
+            with col3:
+                st.write('Ahorro e inversión')
+                st.write(f'🏦 ${ahorros:,.0f}')
+
+            # Visualizar presupuesto
+            plot_budget(necesidades, deseos, ahorros)
+
         if submit_button and ingresos == 0:
             st.warning('Ingresa un valor válido para los ingresos')
-
-    if submit_button and ingresos > 0:
-
-        necesidades, deseos, ahorro = \
-            calcular_presupuesto(ingresos, gastos_esenciales)
-
-        # Mostrar presupuesto en 3 columnas con su explicación
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.write('Gastos esenciales')
-            st.write(f'💰 ${necesidades:,.0f}')
-        with col2:
-            st.write('Gastos prescindibles')
-            st.write(f'💸 ${deseos:,.0f}')
-        with col3:
-            st.write('Ahorro e inversión')
-            st.write(f'🏦 ${ahorro:,.0f}')
-
-        # Visualizar presupuesto
-        plot_budget(necesidades, deseos, ahorro)
-        st.markdown('---')
 
     # Mostrar información sobre el presupuesto 50-30-20
     st.markdown('## Cómo funciona el presupuesto 50-30-20')
